@@ -39,12 +39,12 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 #   Railway Variables mein BOT_TOKEN ho to wahi use hoga.
 #   GitHub repo PRIVATE rakhna. Token kisi ko mat bhejna.
 # ======================================================================
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8539575183:AAFAlliaB_eetu2JvIoCGMognYNHal3lCEE").strip() or "8656406498:AAEsl02_R0wNLAp4tVMaFNZBa-KOKN3T_2Y"
+BOT_TOKEN = os.environ.get("BOT_TOKEN","8656406498:AAEsl02_R0wNLAp4tVMaFNZBa-KOKN3T_2Y").strip() or "8656406498:AAEsl02_R0wNLAp4tVMaFNZBa-KOKN3T_2Y"
 
 # --- SETTINGS (baaki settings) ---
 # Group ke ID. Test group jodna ho to comma lagakar uska ID likho,
 # jaise [-1004383728292, -100123456789]. ID /chatid se milta hai.
-GROUP_IDS = [-1004383728292, -1004199368031]
+GROUP_IDS = [-1004383728292, -1004367386343]
 
 # Sirf in IDs wale log /add aur /close chala sakte hain.
 ADMIN_IDS = [7054168366, 7346725373]
