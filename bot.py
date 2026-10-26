@@ -217,15 +217,23 @@ def init_db():
         except sqlite3.OperationalError:
             pass
 
-TRADE_START = 200  # pehla trade ID isi number se shuru hoga
+TRADE_START = 33  # Trade ID is number se neeche kabhi nahi jayega
 
 def new_trade_id():
-    n = max(db_one("SELECT COUNT(*) FROM deals")[0] + 1, TRADE_START)
-    while True:
-        code = f"DL-JERRY-{n}"
-        if not db_one("SELECT 1 FROM deals WHERE trade_id=?", (code,)):
-            return code
+    # Pichhla number alag table mein yaad rakhta hai, deals ginne par nirbhar nahi
+    db_exec("CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY, v INTEGER)")
+    last = db_one("SELECT v FROM meta WHERE k='last_trade_no'")
+    last = last[0] if last else 0
+    nums = [
+        int(m.group(1))
+        for (t,) in db_all("SELECT trade_id FROM deals")
+        if t and (m := re.search(r"-(\d+)$", t))
+    ]
+    n = max(last, max(nums, default=0), TRADE_START - 1) + 1
+    while db_one("SELECT 1 FROM deals WHERE trade_id=?", (f"DL-JERRY-{n}",)):
         n += 1
+    db_exec("INSERT OR REPLACE INTO meta (k, v) VALUES ('last_trade_no', ?)", (n,))
+    return f"DL-JERRY-{n}"
 
 # --- PARSING (amount, form) ---
 NUM_RE = re.compile(r"\d[\d,]*(?:\.\d+)?")
