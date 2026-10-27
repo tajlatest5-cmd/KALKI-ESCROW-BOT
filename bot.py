@@ -35,7 +35,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 # ======================================================================
 # BOT TOKEN: Railway Variables mein BOT_TOKEN daalo (code mein mat likho)
 # ======================================================================
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "xxxx").strip() or "xxxx"
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I").strip() or "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I"
 if BOT_TOKEN in ("", "xxxx"):
     raise SystemExit("BOT_TOKEN set nahi hai. Railway Variables mein daalo.")
 
