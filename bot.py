@@ -314,28 +314,29 @@ def is_empty(value):
 
 def calc_fee(amount):
     if amount < 200:
-        return "Flat ₹10", 10.0
+        return "Flat 0", 10.0
     if amount <= 500:
-        return "Flat ₹20", 20.0
+        return "Flat 0", 20.0
     if amount <= 2000:
-        rate = 4
+        rate = 0
     elif amount <= 3000:
-        rate = 3.5
+        rate = 0
     else:
-        rate = 3
+        rate = 0
     return f"{rate:.2f}%", amount * rate / 100
 
+def calc_fee(amount):
+    return "0%", 0.0
+
 def fee_text(amount):
-    rate_text, fee = calc_fee(amount)
-    lines = [
+    return "\n".join([
         f"{BAG} <b>FEE CALCULATE</b>",
         "",
         f"{PIN} Deal: {money(amount)}",
-        f"{CHART} Rate: {rate_text}",
-        f"{FEE} Fee: {money(fee)}",
+        f"{FEE} Fee: {money(0)}",
         "",
-        f"{DONE} <b>Total: {money(amount + fee)}</b>",
-    ]
+        f"{DONE} <b>Total: {money(amount)}</b>",
+    ])
     return "\n".join(lines)
 
 # --- DISPLAY HELPERS (/add aur /close ke liye) ---
