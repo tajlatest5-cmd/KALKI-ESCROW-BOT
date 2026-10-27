@@ -1,2 +1,1 @@
-python-telegram-bot>=21.0
-telethon>=1.36
+python-telegram-bot[job-queue]>=21.0
