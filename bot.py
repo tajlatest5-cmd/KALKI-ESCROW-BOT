@@ -359,11 +359,14 @@ def tc_show(value):
 def group_welcome_text(users):
     names = ", ".join(user_tag(u) for u in users)
     lines = [
-        f"{DONE} <b>JOIN REQUEST ACCEPT</b>",
+        f"{STAR} <b>Welcome {esc(name)}!</b>",
+        DIVIDER,
+        f"{SHIELD} <b>Escrow Bot for @zenoxescrowservice</b>",
+        f"{CHAT} <b>Provided by @zenoxescrowservice</b>",
         "",
-        f"👋 <b>WELCOME</b> {names}",
-        "",
-        f"{SHIELD} <b>TRUSTED DEAL ESCROW SERVICE</b>",
+        f"{SIGN} <b>This is Your Personal Dashboard:</b>",
+        DIVIDER,
+        f"Select the option below {BOLT}",
     ]
     return "\n".join(lines)
 
@@ -416,14 +419,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def group_welcome_text(users):
     names = ", ".join(mention(u.id, u.first_name) for u in users)
+    def group_welcome_text(users):
+    names = ", ".join(user_tag(u) for u in users)
     lines = [
-        f"{STAR} <b>Welcome</b> {names}!",
-        DIVIDER,
-        f"{SHIELD} <b>Escrow Service: @zenoxescrowservice</b>",
+        f"{DONE} <b>JOIN REQUEST ACCEPT</b>",
         "",
-        f"{FILE} Deal ka form chahiye? <b>form</b> likho.",
-        f"{BAG} Fee dekhni hai? <b>fees</b> likho.",
-        f"{WARN} Deal sirf escrower ke through hi karo.",
+        f"👋 <b>WELCOME</b> {names}",
+        "",
+        f"{SHIELD} <b>TRUSTED DEAL ESCROW SERVICE</b>",
     ]
     return "\n".join(lines)
 
