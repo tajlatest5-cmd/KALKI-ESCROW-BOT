@@ -22,6 +22,7 @@ from telegram.ext import (
     CallbackQueryHandler,
     MessageHandler,
     ChatJoinRequestHandler,
+    ChatMemberHandler,
     filters,
     ContextTypes,
 )
@@ -426,12 +427,46 @@ def group_welcome_text(users):
         f"{SHIELD} <b>TRUSTED DEAL ESCROW SERVICE</b>",
     ]
     return "\n".join(lines)
+def already_welcomed(context, chat_id, user_id):
+    store = context.bot_data.setdefault("welcomed", {})
+    now = tm.time()
+    for k in [k for k, t in store.items() if now - t > 120]:
+        store.pop(k, None)
+    if (chat_id, user_id) in store:
+        return True
+    store[(chat_id, user_id)] = now
+    return False
 
+def _is_in(m):
+    return m.status in ("member", "administrator", "creator") or (
+        m.status == "restricted" and m.is_member
+    )
+
+async def member_joined(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    cmu = update.chat_member
+    if cmu is None or cmu.chat.id not in GROUP_IDS:
+        return
+    if _is_in(cmu.old_chat_member) or not _is_in(cmu.new_chat_member):
+        return
+    user = cmu.new_chat_member.user
+    if user.is_bot or already_welcomed(context, cmu.chat.id, user.id):
+        return
+    try:
+        await context.bot.send_message(
+            cmu.chat.id,
+            group_welcome_text([user]),
+            parse_mode=ParseMode.HTML,
+        )
+    except Exception as e:
+        logging.warning("welcome failed: %s", e)
 async def welcome_new(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.message
     if msg is None or not in_group(update):
         return
-    users = [u for u in (msg.new_chat_members or []) if not u.is_bot]
+        users = [
+        u for u in (msg.new_chat_members or [])
+        if not u.is_bot and not already_welcomed(context, msg.chat_id, u.id)
+        ]
     if not users:
         return
     try:
@@ -1294,6 +1329,7 @@ def main():
     app.add_handler(
         MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_new)
     )
+    app.add_handler(ChatMemberHandler(member_joined, ChatMemberHandler.CHAT_MEMBER))
     app.add_handler(CallbackQueryHandler(buttons))
     # app.add_handler(ChatJoinRequestHandler(join_request))
     # photo + caption mein /add ya /close (text wale handler se pehle)
