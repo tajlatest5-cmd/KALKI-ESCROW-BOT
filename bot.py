@@ -1495,6 +1495,8 @@ def main():
     app.add_handler(
         MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_new)
     )
+        app.add_handler(CommandHandler("admin", admin_panel))
+    app.add_handler(CallbackQueryHandler(admin_buttons, pattern=r"^adm_"))
     app.add_handler(ChatMemberHandler(member_joined, ChatMemberHandler.CHAT_MEMBER))
     app.add_handler(CallbackQueryHandler(buttons))
     # app.add_handler(ChatJoinRequestHandler(join_request))
