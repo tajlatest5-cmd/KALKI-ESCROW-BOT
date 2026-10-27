@@ -33,11 +33,13 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 # ======================================================================
-# BOT TOKEN: Railway Variables mein BOT_TOKEN daalo (code mein mat likho)
+# BOT TOKEN: YAHAN DAALO (sirf yahi ek jagah)
+#   Neeche wali line mein "YAHAN_APNA_TOKEN_DAALO" hatao aur BotFather ka
+#   poora token likho, quotes " " ke ANDAR hi, bina space ke.
+#   Railway Variables mein BOT_TOKEN ho to wahi use hoga.
+#   GitHub repo PRIVATE rakhna. Token kisi ko mat bhejna.
 # ======================================================================
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I").strip() or "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I"
-if BOT_TOKEN in ("", "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I"):
-    raise SystemExit("BOT_TOKEN set nahi hai. Railway Variables mein daalo.")
+BOT_TOKEN = os.environ.get("BOT_TOKEN","8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I").strip() or "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I"
 
 # --- SETTINGS ---
 GROUP_IDS = [-1004199368031]            # kam se kam ek ID zaroori
