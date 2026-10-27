@@ -1492,8 +1492,10 @@ def main():
     app.add_handler(CommandHandler("fees", fees_cmd))
     app.add_handler(CommandHandler("lock", lock_cmd))
     app.add_handler(CommandHandler("unlock", unlock_cmd))
-    app.add_handler(
+        app.add_handler(CommandHandler("unlock", unlock_cmd))
+    app.add_handler(              ← seedh mein (sahi)
         MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_new)
+    )
     )
         app.add_handler(CommandHandler("admin", admin_panel))
     app.add_handler(CallbackQueryHandler(admin_buttons, pattern=r"^adm_"))
