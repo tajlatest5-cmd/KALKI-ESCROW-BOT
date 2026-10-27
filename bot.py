@@ -47,7 +47,7 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN","8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXI
 GROUP_IDS = [-1004199368031]
 
 # Sirf in IDs wale log /add aur /close chala sakte hain.
-ADMIN_IDS = [7054168366, 7346725373]
+ADMIN_IDS = [7054168366, 5797432326, 5928049700, 5803014746, 8359951414, 7161559973, 8161057089, 7396561160,]
 
 # Database file. Railway Volume lagaya ho to DB_PATH=/data/bot.db rakho.
 DB_PATH = os.environ.get("DB_PATH", "bot.db")
