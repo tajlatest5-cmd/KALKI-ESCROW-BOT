@@ -44,10 +44,10 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN","8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXI
 # --- SETTINGS (baaki settings) ---
 # Group ke ID. Test group jodna ho to comma lagakar uska ID likho,
 # jaise [-1004383728292, -100123456789]. ID /chatid se milta hai.
-GROUP_IDS = [-1004199368031]
+GROUP_IDS = [-1004365014195]
 
 # Sirf in IDs wale log /add aur /close chala sakte hain.
-ADMIN_IDS = [7054168366, 5797432326, 5928049700, 5803014746, 8359951414, 7161559973, 8161057089, 7396561160,]
+ADMIN_IDS = [7054168366, 8671513822, 5797432326, 5928049700, 5803014746, 8359951414, 7161559973, 8161057089, 7396561160,]
 
 # Database file. Railway Volume lagaya ho to DB_PATH=/data/bot.db rakho.
 DB_PATH = os.environ.get("DB_PATH", "bot.db")
@@ -361,8 +361,8 @@ def group_welcome_text(users):
     lines = [
         f"{STAR} <b>Welcome {esc(name)}!</b>",
         DIVIDER,
-        f"{SHIELD} <b>Escrow Bot for @zenoxescrowservice</b>",
-        f"{CHAT} <b>Provided by @zenoxescrowservice</b>",
+        f"{SHIELD} <b>developer Bot for @ZENOx0G</b>",
+        f"{CHAT} <b>Provided by @RANCHOO_XD</b>",
         "",
         f"{SIGN} <b>This is Your Personal Dashboard:</b>",
         DIVIDER,
