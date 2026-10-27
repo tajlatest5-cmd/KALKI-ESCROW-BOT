@@ -315,6 +315,172 @@ def parse_form(text):
 def is_empty(value):
     return re.sub(r"[\s_\-.•·:|]+", "", value or "") == ""
 
+# --- ADMIN PANEL (/admin) : sirf ADMIN_IDS ---
+
+def today_like():
+    return datetime.now(IST).strftime("%Y-%m-%d") + "%"
+
+def admin_home_text():
+    return "\n".join([
+        f"{SHIELD} <b>ADMIN PANEL</b>",
+        DIVIDER,
+        f"Option chuno {BOLT}",
+    ])
+
+def admin_home_buttons():
+    rows = [
+        [icon_btn("Hold Deals", "adm_hold", "5879895758202735862")],
+        [icon_btn("Aaj Ki Stats", "adm_today", "5913702317667913862")],
+        [icon_btn("My Stats", "adm_me", "5796440171364749940")],
+    ]
+    return InlineKeyboardMarkup(rows)
+
+def admin_back_button():
+    return InlineKeyboardMarkup(
+        [[InlineKeyboardButton("🔙 Back", callback_data="adm_home")]]
+    )
+
+def deal_line(row):
+    trade_id, amount, b_show, s_show, b, s = row
+    return (
+        f"<code>{esc(trade_id)}</code> - {inr(amount)}\n"
+        f"   {esc(shown(b_show, b))} ➜ {esc(shown(s_show, s))}"
+    )
+
+def admin_today_text():
+    day = today_like()
+    args = G_ARGS + (day,)
+    added = db_one(
+        f"SELECT COUNT(*), COALESCE(SUM(amount), 0) FROM deals "
+        f"WHERE {G_SQL} AND created_at LIKE ?", args)
+    done_where = f"{G_SQL} AND status='completed' AND closed_at LIKE ?"
+    done = db_one(
+        f"SELECT COUNT(*), COALESCE(SUM(amount), 0) FROM deals "
+        f"WHERE {done_where}", args)
+    pending = db_one(
+        f"SELECT COUNT(*) FROM deals WHERE {G_SQL} AND status='pending'",
+        G_ARGS)[0]
+    hold = db_one(
+        f"SELECT COUNT(*) FROM deals WHERE {G_SQL} AND status='pending' "
+        f"AND hold_at IS NOT NULL", G_ARGS)[0]
+
+    lines = [
+        f"{CHART} <b>AAJ KI STATS</b>",
+        DIVIDER,
+        f"{TAGI} <b>Aaj Add Hui:</b> {added[0]} ({inr(added[1])})",
+        f"{DONE} <b>Aaj Complete:</b> {done[0]} ({inr(done[1])})",
+        f"{PIN} <b>Total Pending:</b> {pending}",
+        f"{LOCK} <b>Total Hold:</b> {hold}",
+    ]
+    if done[0] == 0:
+        lines += ["", "Aaj abhi koi deal complete nahi hui."]
+        return "\n".join(lines)
+
+    grp = (
+        f"SELECT escrower_id, MAX(escrower_name), COUNT(*), SUM(amount) "
+        f"FROM deals WHERE {done_where} GROUP BY escrower_id "
+    )
+    top_count = db_one(grp + "ORDER BY COUNT(*) DESC, SUM(amount) DESC LIMIT 1", args)
+    top_amount = db_one(grp + "ORDER BY SUM(amount) DESC, COUNT(*) DESC LIMIT 1", args)
+    cols = "SELECT trade_id, amount, buyer_show, seller_show, buyer, seller FROM deals "
+    big = db_one(cols + f"WHERE {done_where} ORDER BY amount DESC, id DESC LIMIT 1", args)
+    small = db_one(cols + f"WHERE {done_where} ORDER BY amount ASC, id DESC LIMIT 1", args)
+
+    lines.append("")
+    if top_count:
+        uid, name, cnt, vol = top_count
+        lines.append(f"{TREND} <b>Sabse Zyada Deals:</b> {mention(uid, name)} - {cnt} deals ({inr(vol)})")
+    if top_amount:
+        uid, name, cnt, vol = top_amount
+        lines.append(f"{GEM} <b>Sabse Zyada Amount:</b> {mention(uid, name)} - {inr(vol)} ({cnt} deals)")
+    if big:
+        lines += ["", f"{BAG} <b>Sabse Badi Deal:</b>", deal_line(big)]
+    if small:
+        lines += ["", f"{BAG} <b>Sabse Chhoti Deal:</b>", deal_line(small)]
+    return "\n".join(lines)
+
+def admin_me_text(user):
+    day = today_like()
+    base = f"{G_SQL} AND escrower_id=?"
+    args = G_ARGS + (user.id,)
+    total = db_one(
+        f"SELECT COUNT(*), COALESCE(SUM(amount), 0) FROM deals "
+        f"WHERE {base} AND status='completed'", args)
+    today = db_one(
+        f"SELECT COUNT(*), COALESCE(SUM(amount), 0) FROM deals "
+        f"WHERE {base} AND status='completed' AND closed_at LIKE ?",
+        args + (day,))
+    pending = db_one(
+        f"SELECT COUNT(*) FROM deals WHERE {base} AND status='pending'",
+        args)[0]
+    hold = db_one(
+        f"SELECT COUNT(*) FROM deals WHERE {base} AND status='pending' "
+        f"AND hold_at IS NOT NULL", args)[0]
+    recent = db_all(
+        f"SELECT trade_id, amount, closed_at FROM deals WHERE {base} "
+        f"AND status='completed' ORDER BY id DESC LIMIT 5", args)
+    lines = [
+        f"{BUYER} <b>MY STATS</b> - {user_tag(user)}",
+        DIVIDER,
+        f"{DONE} <b>Aaj Ki Deals:</b> {today[0]} ({inr(today[1])})",
+        f"{GEM} <b>Total Deals:</b> {total[0]}",
+        f"{BAG} <b>Total Amount:</b> {inr(total[1])}",
+        f"{PIN} <b>Pending:</b> {pending}",
+        f"{LOCK} <b>Hold:</b> {hold}",
+    ]
+    if recent:
+        lines += ["", f"{TREND} <b>Recent:</b>"]
+        for trade_id, amount, closed_at in recent:
+            lines.append(f"{DONE} <code>{esc(trade_id)}</code> - {inr(amount)} ({closed_at or '-'})")
+    return "\n".join(lines)
+
+async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.message
+    if msg is None:
+        return
+    if not is_admin(update):
+        await reply_html(msg, f"{WARN} Aap is command ke liye allowed nahi ho.")
+        return
+    await msg.reply_text(
+        admin_home_text(),
+        parse_mode=ParseMode.HTML,
+        reply_markup=admin_home_buttons(),
+    )
+
+async def admin_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    if query is None:
+        return
+    user = query.from_user
+    if user.id not in ADMIN_IDS:
+        try:
+            await query.answer("Ye sirf admin ke liye hai.", show_alert=True)
+        except Exception:
+            pass
+        return
+    try:
+        await query.answer()
+    except Exception:
+        pass
+
+    data = query.data
+    if data == "adm_hold":
+        text, markup = hold_list_text(), admin_back_button()
+    elif data == "adm_today":
+        text, markup = admin_today_text(), admin_back_button()
+    elif data == "adm_me":
+        text, markup = admin_me_text(user), admin_back_button()
+    else:
+        text, markup = admin_home_text(), admin_home_buttons()
+    try:
+        await query.edit_message_text(
+            text, parse_mode=ParseMode.HTML, reply_markup=markup
+        )
+    except Exception as e:
+        logging.info("admin edit skipped: %s", e)
+
+
+
 # --- FEES ---
 
 def calc_fee(amount):
