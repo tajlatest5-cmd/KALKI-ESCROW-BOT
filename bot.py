@@ -39,11 +39,11 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 #   Token sirf yahin se padha jata hai, kisi Variable ki zaroorat nahi.
 #   GitHub repo PRIVATE rakhna. Token kisi ko mat bhejna.
 # ======================================================================
-BOT_TOKEN = "8864009675:AAFkLjO-qWvsSoQaJ_KrizRTY5lAAeGcAR8"
+BOT_TOKEN = "8864009675:AAHcjgEmy-D2xdA4zyE7CdudXtgXIsOf80I"
 # --- SETTINGS (baaki settings) ---
 # Group ke ID. Test group jodna ho to comma lagakar uska ID likho,
 # jaise [-1004383728292, -100123456789]. ID /chatid se milta hai.
-GROUP_IDS = [-1004383728292, -1004367386343]
+GROUP_IDS = [-1004199368031, -1004367386343]
 
 # Sirf in IDs wale log /add aur /close chala sakte hain.
 ADMIN_IDS = [7054168366, 7346725373]
