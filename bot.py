@@ -418,8 +418,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # --- GROUP WELCOME (naya member aaye to) ---
 
 def group_welcome_text(users):
-    names = ", ".join(mention(u.id, u.first_name) for u in users)
-    def group_welcome_text(users) 
+    names = ", ".join(user_tag(u) for u in users)
     lines = [
         f"{DONE} <b>JOIN REQUEST ACCEPT</b>",
         "",
