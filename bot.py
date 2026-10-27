@@ -217,7 +217,7 @@ def init_db():
         except sqlite3.OperationalError:
             pass
 
-TRADE_START = 33  # Trade ID is number se neeche kabhi nahi jayega
+TRADE_START = 1  # Trade ID is number se neeche kabhi nahi jayega
 
 def new_trade_id():
     # Pichhla number alag table mein yaad rakhta hai, deals ginne par nirbhar nahi
@@ -233,7 +233,7 @@ def new_trade_id():
     while db_one("SELECT 1 FROM deals WHERE trade_id=?", (f"DL-JERRY-{n}",)):
         n += 1
     db_exec("INSERT OR REPLACE INTO meta (k, v) VALUES ('last_trade_no', ?)", (n,))
-    return f"DL-JERRY-{n}"
+    return f"DL-RANCHO-{n}"
 
 # --- PARSING (amount, form) ---
 NUM_RE = re.compile(r"\d[\d,]*(?:\.\d+)?")
