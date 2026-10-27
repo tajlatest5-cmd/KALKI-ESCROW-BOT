@@ -212,7 +212,7 @@ def init_db():
         except sqlite3.OperationalError:
             pass
 
-TRADE_START = 33  # Trade ID is number se neeche kabhi nahi jayega
+TRADE_START = 1  # Trade ID is number se neeche kabhi nahi jayega
 
 def new_trade_id():
     last = db_one("SELECT v FROM meta WHERE k='last_trade_no'")
@@ -223,10 +223,10 @@ def new_trade_id():
         if t and (m := re.search(r"-(\d+)$", t))
     ]
     n = max(last, max(nums, default=0), TRADE_START - 1) + 1
-    while db_one("SELECT 1 FROM deals WHERE trade_id=?", (f"DL-JERRY-{n}",)):
+    while db_one("SELECT 1 FROM deals WHERE trade_id=?", (f"DL-RANCHO-{n}",)):
         n += 1
     db_exec("INSERT OR REPLACE INTO meta (k, v) VALUES ('last_trade_no', ?)", (n,))
-    return f"DL-JERRY-{n}"
+    return f"DL-RANCHO-{n}"
 
 # --- PARSING ---
 NUM_RE = re.compile(r"\d[\d,]*(?:\.\d+)?")
@@ -341,8 +341,8 @@ def dashboard_text(name):
     lines = [
         f"{STAR} <b>Welcome {esc(name)}!</b>",
         DIVIDER,
-        f"{SHIELD} <b>Escrow Bot for @zenoxescrowservice</b>",
-        f"{CHAT} <b>Provided by @zenoxescrowservice</b>",
+        f"{SHIELD} <b>developer Bot for @ZENOx0G</b>",
+        f"{CHAT} <b>Provided by @RANCHOO_XD</b>",
         "",
         f"{SIGN} <b>This is Your Personal Dashboard:</b>",
         DIVIDER,
