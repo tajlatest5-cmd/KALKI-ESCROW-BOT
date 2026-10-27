@@ -356,12 +356,11 @@ def tc_show(value):
 
 # --- /start DASHBOARD ---
 
-def group_welcome_text(users):
-    names = ", ".join(user_tag(u) for u in users)
+def dashboard_text(name):
     lines = [
         f"{STAR} <b>Welcome {esc(name)}!</b>",
         DIVIDER,
-        f"{SHIELD} <b>developer Bot for @ZENOx0G</b>",
+        f"{SHIELD} <b>developer Bot for @ZENOxOG</b>",
         f"{CHAT} <b>Provided by @RANCHOO_XD</b>",
         "",
         f"{SIGN} <b>This is Your Personal Dashboard:</b>",
