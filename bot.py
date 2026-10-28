@@ -536,7 +536,7 @@ def dashboard_text(name):
     lines = [
         f"{STAR} <b>Welcome {esc(name)}!</b>",
         DIVIDER,
-        f"{SHIELD} <b>developer Bot for @ZENOxOG</b>",
+        f"{SHIELD} <b>developer Bot for @ZENOx0G</b>",
         f"{CHAT} <b>Provided by @RANCHOO_XD</b>",
         "",
         f"{SIGN} <b>This is Your Personal Dashboard:</b>",
@@ -1504,9 +1504,7 @@ def main():
     app.add_handler(CommandHandler("close", close))
     app.add_handler(CommandHandler("hold", hold_deal))
     app.add_handler(CommandHandler("form", form_cmd))
-    app.add_handler(CommandHandler("fees", fees_cmd))
-    app.add_handler(CommandHandler("lock", lock_cmd))
-    app.add_handler(CommandHandler("unlock", unlock_cmd))
+    app.add_handler(CommandHandler("fees", fees_cmd)) 
     app.add_handler(CommandHandler("admin", admin_panel))
     app.add_handler(
         MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_new)
