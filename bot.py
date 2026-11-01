@@ -530,6 +530,47 @@ def tc_show(value):
         return "Not Provided"
     return value[:200]
 
+
+
+# --- AUTO PROMO MESSAGE (har 5 minute naya, pehla delete) ---
+PROMO_INTERVAL = 300          # seconds (300 = 5 minute)
+PROMO_OWNER = "@RANCHOO_XD"   # <- yahan apne owner ka username likho
+
+def promo_text():
+    return "\n".join([
+        "👋 <b>HII BHAI DEAL KARO</b>",
+        f"{BAG} <b>HAR DEAL PER AAPKO PAISE MILENGE</b>",
+        f"{SHIELD} <b>CONTACT OWNER:</b> {esc(PROMO_OWNER)}",
+    ])
+
+async def promo_job(context: ContextTypes.DEFAULT_TYPE):
+    db_exec(
+        "CREATE TABLE IF NOT EXISTS promo_msgs "
+        "(chat_id INTEGER PRIMARY KEY, message_id INTEGER)"
+    )
+    for gid in GROUP_IDS:
+        row = db_one("SELECT message_id FROM promo_msgs WHERE chat_id=?", (gid,))
+        try:
+            sent = await context.bot.send_message(
+                gid,
+                promo_text(),
+                parse_mode=ParseMode.HTML,
+                disable_notification=True,
+            )
+        except Exception as e:
+            logging.warning("promo send failed (%s): %s", gid, e)
+            continue
+        db_exec(
+            "INSERT OR REPLACE INTO promo_msgs (chat_id, message_id) VALUES (?, ?)",
+            (gid, sent.message_id),
+        )
+        if row:
+            try:
+                await context.bot.delete_message(gid, row[0])
+            except Exception as e:
+                logging.info("promo delete skipped: %s", e)
+
+
 # --- /start DASHBOARD ---
 
 def dashboard_text(name):
@@ -1540,7 +1581,9 @@ def main():
         app.job_queue.run_repeating(
             schedule_check, interval=60, first=10, name="schedule"
         )
-
+        app.job_queue.run_repeating(
+            promo_job, interval=PROMO_INTERVAL, first=30, name="promo"
+    )
     logging.info("Bot start ho gaya.")
     try:
         app.run_polling(
