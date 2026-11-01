@@ -533,7 +533,7 @@ def tc_show(value):
 
 
 # --- AUTO PROMO MESSAGE (har 5 minute naya, pehla delete) ---
-PROMO_INTERVAL = 300          # seconds (300 = 5 minute)
+PROMO_INTERVAL = 60           # seconds (60 = 1 minute)
 PROMO_OWNER = "@RANCHOO_XD"   # <- yahan apne owner ka username likho
 
 def promo_text():
