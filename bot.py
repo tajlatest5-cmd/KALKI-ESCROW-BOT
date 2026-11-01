@@ -1572,7 +1572,7 @@ def main():
     )
     app.add_error_handler(on_error)
 
-    if app.job_queue is None:
+        if app.job_queue is None:
         logging.warning(
             "JobQueue nahi mila: auto lock/unlock band hai. "
             "requirements.txt mein python-telegram-bot[job-queue] likho."
@@ -1583,7 +1583,7 @@ def main():
         )
         app.job_queue.run_repeating(
             promo_job, interval=PROMO_INTERVAL, first=30, name="promo"
-    )
+        )
     logging.info("Bot start ho gaya.")
     try:
         app.run_polling(
