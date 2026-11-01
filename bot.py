@@ -1583,7 +1583,8 @@ def main():
         )
         app.job_queue.run_repeating(
             promo_job, interval=PROMO_INTERVAL, first=30, name="promo"
-    )
+        )
+ 
     logging.info("Bot start ho gaya.")
     try:
         app.run_polling(
@@ -1595,6 +1596,7 @@ def main():
             "TOKEN REJECT: Telegram is token ko nahi maanta. "
             "BotFather se naya token lo aur Railway BOT_TOKEN mein daalo."
         )
-
+ 
 if __name__ == "__main__":
     main()
+ 
